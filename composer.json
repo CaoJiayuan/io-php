@@ -1,0 +1,21 @@
+{
+    "name": "caojiayuan/io-php",
+    "description": "Socket-io broadcast library",
+    "type": "library",
+    "require": {
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "caojiayuan",
+            "email": "cjy632258@hotmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "CaoJiayuan\\Io\\": "src/"
+        },
+    },
+    "minimum-stability": "dev"
+}
