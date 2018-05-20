@@ -15,7 +15,7 @@
     "autoload": {
         "psr-4": {
             "CaoJiayuan\\Io\\": "src/"
-        },
+        }
     },
     "minimum-stability": "dev"
 }
