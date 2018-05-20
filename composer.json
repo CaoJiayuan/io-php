@@ -3,6 +3,7 @@
     "description": "Socket-io broadcast library",
     "type": "library",
     "require": {
+        "php": ">=7.0.0",
         "guzzlehttp/guzzle": "^6.3"
     },
     "license": "MIT",
