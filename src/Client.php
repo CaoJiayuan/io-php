@@ -18,6 +18,11 @@ class Client
      */
     protected $masterChannel;
 
+    /**
+     * @var null|TokenProvider
+     */
+    protected $token = null;
+
     public function __construct(Requester $requester, $masterChannel = 'master')
     {
         $this->requester = $requester;
@@ -30,6 +35,16 @@ class Client
             'channels' => $channel,
             'payload'  => $payload
         ]);
+    }
+
+    public function setTokenProvider(TokenProvider $provider)
+    {
+        $this->token = $provider;
+    }
+
+    public function getTokenProvider()
+    {
+        return $this->token;
     }
 
     public function post($path, $data = [])

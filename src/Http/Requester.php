@@ -11,6 +11,8 @@ namespace CaoJiayuan\Io\Http;
 
 interface Requester
 {
+    const METHOD_POST = 'POST';
+    const METHOD_GET = 'GET';
     public function request($method, $path, $data = []);
 
 }

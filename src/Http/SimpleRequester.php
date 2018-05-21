@@ -13,18 +13,15 @@ use CaoJiayuan\Io\Token\Provider;
 use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
 
-class SimpleRequester implements Requester
+class SimpleRequester implements TokenRequester
 {
     protected $baseUrl;
-    /**
-     * @var Provider
-     */
-    private $tokenProvider;
 
-    public function __construct($baseUrl, Provider $tokenProvider)
+    protected $token = null;
+
+    public function __construct($baseUrl)
     {
         $this->baseUrl = $baseUrl;
-        $this->tokenProvider = $tokenProvider;
     }
 
     public function request($method, $path, $data = [])
@@ -59,10 +56,24 @@ class SimpleRequester implements Requester
         $options = [
             'base_uri' => $this->baseUrl,
             'headers' => [
-                'Authorization' => 'Bearer ' . $this->tokenProvider->getToken()
+
             ]
         ];
+        $this->getToken() && $options['headers']['Authorization'] = 'Bearer ' . $this->getToken();
 
         return new Client($options);
+    }
+
+    /**
+     * @param bool|string $token
+     */
+    public function setToken(string $token)
+    {
+        $this->token = $token;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
     }
 }
