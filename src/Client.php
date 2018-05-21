@@ -4,6 +4,7 @@ namespace CaoJiayuan\Io;
 
 
 use CaoJiayuan\Io\Http\Requester;
+use CaoJiayuan\Io\Http\TokenRequester;
 
 class Client
 {
@@ -47,8 +48,11 @@ class Client
         return $this->token;
     }
 
-    public function post($path, $data = [])
+    public function post($path, $data = [], $guest = false)
     {
+        if (!$guest && ($token = $this->getTokenProvider())) {
+            $this->requester instanceof TokenRequester && $this->requester->setToken($token);
+        }
         return $this->requester->request('POST', $path, $data);
     }
 }

@@ -11,7 +11,7 @@ namespace CaoJiayuan\Io\Http;
 
 interface TokenRequester extends Requester
 {
-    public function setToken(string $token);
+    public function setToken($token);
 
-    public function getToken(): ?string;
+    public function getToken();
 }

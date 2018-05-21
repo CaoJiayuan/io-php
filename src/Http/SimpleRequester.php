@@ -67,12 +67,12 @@ class SimpleRequester implements TokenRequester
     /**
      * @param bool|string $token
      */
-    public function setToken(string $token)
+    public function setToken($token)
     {
         $this->token = $token;
     }
 
-    public function getToken(): ?string
+    public function getToken()
     {
         return $this->token;
     }
