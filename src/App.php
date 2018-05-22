@@ -9,12 +9,21 @@
 namespace CaoJiayuan\Io;
 
 
+use CaoJiayuan\Io\Http\SimpleRequester;
+
 class App
 {
 
 
-    public static function create()
+    public static function createSimpleClient($host, array $credentials): Client
     {
-        return new static();
+        $requester = new SimpleRequester($host);
+        $client = new Client($requester);
+
+        $client->setTokenProvider(new TokenProvider($requester));
+
+        $client->setCredentials($credentials);
+
+        return $client;
     }
 }

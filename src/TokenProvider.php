@@ -22,6 +22,8 @@ class TokenProvider
 
     protected $token;
 
+    protected $tokenFile = __DIR__ . '/../__token';
+
     public function __construct(TokenRequester $requester)
     {
         $this->requester = $requester;
@@ -29,19 +31,28 @@ class TokenProvider
 
     public function login($credentials, $path = '/login')
     {
+        $this->loadTokenFromCache();
         if ($this->token) {
             return $this->token;
         }
+        $this->requester->setToken(null);
         $token = $this->requester->request(Requester::METHOD_POST, $path, $credentials);
 
-        return $this->parseToken($token);
+        $t = $this->parseToken($token);
+
+        $this->storeTokenToCache($t);
+
+        return $t;
     }
 
     public function parseToken($token)
     {
-        $this->token = new Token($token['token'], $token['exp']);
-
-        return $token;
+        $exp = null;
+        if (isset($token['exp'])) {
+            $exp = intval($token['exp']);
+        }
+        $this->token = new Token($token['token'], $exp);
+        return $this->token;
     }
 
     public function getToken()
@@ -49,8 +60,28 @@ class TokenProvider
         return $this->token;
     }
 
-    public function loadTokenFromCache()
+    public function loadTokenFromCache(): ?Token
     {
+        if (!file_exists($this->tokenFile)) {
+            return null;
+        }
+        $s = file_get_contents($this->tokenFile);
 
+        $token = unserialize($s);
+
+        if ($token->getExpireAt() && $token->getExpireAt() < time()) {
+            return null;
+        }
+
+        $this->token = $token;
+
+        return $token;
+    }
+
+    public function storeTokenToCache(Token $token)
+    {
+        $s = serialize($token);
+
+        file_put_contents($this->tokenFile, $s);
     }
 }
