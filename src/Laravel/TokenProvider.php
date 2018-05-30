@@ -9,9 +9,49 @@
 namespace CaoJiayuan\Io\Laravel;
 
 
+use CaoJiayuan\Io\Token;
 use CaoJiayuan\Io\TokenProvider as BaseTokenProvider;
+use Illuminate\Cache\Repository;
 
 class TokenProvider extends BaseTokenProvider
 {
+    protected $cacheKey = '__oi_token__';
+    protected $cacheDriver = null;
 
+    public function loadTokenFromCache(): ?Token
+    {
+        $cache = $this->getCacheDriver();
+
+        $data = $cache->get($this->cacheKey);
+        if (!empty($data) && isset($data['token'])) {
+            $token =  new Token($data['token'], $data['exp'] ?? null);
+            $this->token = $token;
+            return $token;
+        }
+
+        return null;
+    }
+
+    public function storeTokenToCache(Token $token)
+    {
+        $t = $token->getToken();
+        $exp = $token->getExpireAt();
+        $cache = $this->getCacheDriver();
+
+        $data = [
+            'token' => $t,
+            'exp' => $exp
+        ];
+        $cache->put($this->cacheKey, $data);
+    }
+
+    /**
+     * Get the cache driver.
+     *
+     * @return \Illuminate\Cache\CacheManager|Repository
+     */
+    protected function getCacheDriver()
+    {
+        return app('cache')->driver($this->cacheDriver);
+    }
 }

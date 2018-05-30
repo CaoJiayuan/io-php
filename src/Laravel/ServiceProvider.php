@@ -9,6 +9,8 @@
 namespace CaoJiayuan\Io\Laravel;
 
 
+use CaoJiayuan\Io\Client;
+use CaoJiayuan\Io\Http\SimpleRequester;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Illuminate\Foundation\Application as LaravelApplication;
@@ -29,15 +31,22 @@ class ServiceProvider extends BaseServiceProvider
 
         $this->mergeConfigFrom($source, 'io-php');
 
+        $this->registerClient();
     }
 
     public function registerClient()
     {
         $this->app->singleton("io-php.client", function ($app) {
+            $host = $app['config']->get('io-php.host', 'http://127.0.0.1:3003');
+            $credentials = $app['config']->get('io-php.credentials', []);
 
+            $requester = new SimpleRequester($host);
+            $client = new Client($requester);
 
+            $client->setTokenProvider(new TokenProvider($requester));
+            $client->setCredentials($credentials);
 
-            return $app;
+            return $client;
         });
     }
 }

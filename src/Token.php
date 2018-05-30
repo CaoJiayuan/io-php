@@ -38,4 +38,12 @@ class Token
     {
         return $this->expire_at;
     }
+
+    /**
+     * @return string
+     */
+    public function getToken(): string
+    {
+        return $this->token;
+    }
 }
