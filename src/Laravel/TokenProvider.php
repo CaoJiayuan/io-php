@@ -15,7 +15,7 @@ use Illuminate\Cache\Repository;
 
 class TokenProvider extends BaseTokenProvider
 {
-    protected $cacheKey = '__oi_token__';
+    protected $cacheKey = '__io_token__';
     protected $cacheDriver = null;
 
     public function loadTokenFromCache(): ?Token
