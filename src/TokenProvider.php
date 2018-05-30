@@ -49,7 +49,7 @@ class TokenProvider
     {
         $exp = null;
         if (isset($token['exp'])) {
-            $exp = intval($token['exp']);
+            $exp = intval(substr($token['exp'], 0, 10));
         }
         $this->token = new Token($token['token'], $exp);
         return $this->token;

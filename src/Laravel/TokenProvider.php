@@ -11,6 +11,7 @@ namespace CaoJiayuan\Io\Laravel;
 
 use CaoJiayuan\Io\Token;
 use CaoJiayuan\Io\TokenProvider as BaseTokenProvider;
+use Carbon\Carbon;
 use Illuminate\Cache\Repository;
 
 class TokenProvider extends BaseTokenProvider
@@ -40,9 +41,14 @@ class TokenProvider extends BaseTokenProvider
 
         $data = [
             'token' => $t,
-            'exp' => $exp
+            'exp'   => $exp
         ];
-        $cache->put($this->cacheKey, $data);
+
+        if (is_null($exp)) {
+            $cache->put($this->cacheKey, $data);
+        } else {
+            $cache->put($this->cacheKey, $data, Carbon::createFromTimestamp($exp));
+        }
     }
 
     /**
