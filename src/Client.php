@@ -50,9 +50,9 @@ class Client
         ], $guest);
     }
 
-    public function config(array $configs, $guest = false)
+    public function config(array $configs)
     {
-        return $this->post('/config', $configs, $guest);
+        return $this->post('/config', $configs, false);
     }
 
     public function setTokenProvider(TokenProvider $provider)
