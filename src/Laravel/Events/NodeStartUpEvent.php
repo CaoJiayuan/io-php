@@ -8,13 +8,10 @@
 
 namespace CaoJiayuan\Io\Laravel\Events;
 
-
-use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Http\Request;
 
 class NodeStartUpEvent
 {
-    use Dispatchable;
 
     protected $request;
 
