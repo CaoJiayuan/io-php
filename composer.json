@@ -18,5 +18,12 @@
             "CaoJiayuan\\Io\\": "src/"
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "CaoJiayuan\\Io\\Laravel\\ServiceProvider"
+            ]
+        }
+    }
 }
