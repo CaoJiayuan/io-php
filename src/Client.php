@@ -50,6 +50,11 @@ class Client
         ], $guest);
     }
 
+    public function config(array $configs, $guest = false)
+    {
+        return $this->post('/config', $configs, $guest);
+    }
+
     public function setTokenProvider(TokenProvider $provider)
     {
         $this->token = $provider;
