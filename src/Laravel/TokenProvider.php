@@ -24,6 +24,7 @@ class TokenProvider extends BaseTokenProvider
         $cache = $this->getCacheDriver();
 
         $data = $cache->get($this->cacheKey);
+
         if (!empty($data) && isset($data['token'])) {
             $token =  new Token($data['token'], $data['exp'] ?? null);
             $this->token = $token;
@@ -45,7 +46,7 @@ class TokenProvider extends BaseTokenProvider
         ];
 
         if (is_null($exp)) {
-            $cache->put($this->cacheKey, $data);
+            $cache->forever($this->cacheKey, $data);
         } else {
             $cache->put($this->cacheKey, $data, Carbon::createFromTimestamp($exp));
         }

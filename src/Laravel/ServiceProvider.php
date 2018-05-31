@@ -23,8 +23,10 @@ class ServiceProvider extends BaseServiceProvider
     {
         $source = realpath(__DIR__.'/config.php');
 
-        if ($this->app instanceof LaravelApplication && $this->app->runningInConsole()) {
-            $this->publishes([$source => config_path('io-php.php')], 'io-php');
+        if ($this->app instanceof LaravelApplication) {
+            if ($this->app->runningInConsole()) {
+                $this->publishes([$source => config_path('io-php.php')], 'io-php');
+            }
         } elseif ($this->app instanceof LumenApplication) {
             $this->app->configure('io-php');
         }
@@ -48,5 +50,24 @@ class ServiceProvider extends BaseServiceProvider
 
             return $client;
         });
+    }
+
+    public function boot()
+    {
+        if ($this->app instanceof LaravelApplication) {
+            require __DIR__.'/routes/laravel.php';
+        } elseif ($this->app instanceof LumenApplication) {
+            $app = $this->app;
+
+            if (property_exists($app, 'router')) {
+                $app->router->group(['namespace' => 'CaoJiayuan\Io\Laravel'], function ($app) {
+                    require __DIR__ . '/routes/lumen.php';
+                });
+            } else {
+                $app->group(['namespace' => 'CaoJiayuan\Io\Laravel'], function ($app) {
+                    require __DIR__ . '/routes/lumen.php';
+                });
+            }
+        }
     }
 }
