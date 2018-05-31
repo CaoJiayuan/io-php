@@ -13,7 +13,10 @@ use Illuminate\Http\Request;
 class NodeStartUpEvent
 {
 
-    protected $request;
+    /**
+     * @var Request
+     */
+    public $request;
 
     public function __construct(Request $request)
     {

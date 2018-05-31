@@ -44,7 +44,7 @@ class Client
 
     public function subscribe($channel, $hooks, $guest = false)
     {
-        return $this->post('/broadcast', [
+        return $this->post('/subscribe', [
             'channels' => $channel,
             'hooks'    => $hooks
         ], $guest);

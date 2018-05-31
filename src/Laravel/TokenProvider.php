@@ -26,7 +26,7 @@ class TokenProvider extends BaseTokenProvider
         $data = $cache->get($this->cacheKey);
 
         if (!empty($data) && isset($data['token'])) {
-            $token =  new Token($data['token'], $data['exp'] ?? null);
+            $token = new Token($data['token'], $data['exp'] ?? null);
             $this->token = $token;
             return $token;
         }
