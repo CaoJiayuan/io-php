@@ -34,14 +34,14 @@ class GenerateClientId extends Command
             file_put_contents($path, PHP_EOL."IO_CLIENT_ID=$id", FILE_APPEND);
         } else {
             if ($this->isConfirmed() === false) {
-                $this->comment('Phew... No changes were made to your secret id.');
+                $this->comment('No changes were made to your client id.');
 
                 return;
             }
 
             // create new entry
             file_put_contents($path, str_replace(
-                'IO_CLIENT_ID='.$this->laravel['config']['jwt.secret'],
+                'IO_CLIENT_ID='.$this->laravel['config']['io-php.credentials._id'],
                 'IO_CLIENT_ID='.$id, file_get_contents($path)
             ));
         }
