@@ -11,6 +11,7 @@ namespace CaoJiayuan\Io\Laravel;
 
 use CaoJiayuan\Io\Client;
 use CaoJiayuan\Io\Http\SimpleRequester;
+use CaoJiayuan\Io\Laravel\Console\GenerateClientId;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Illuminate\Foundation\Application as LaravelApplication;
@@ -34,9 +35,22 @@ class ServiceProvider extends BaseServiceProvider
         $this->mergeConfigFrom($source, 'io-php');
 
         $this->registerClient();
+
+        $this->registerCommand();
     }
 
-    public function registerClient()
+    protected function registerCommand()
+    {
+        if ($this->app->runningInConsole()) {
+            $this->app->singleton('io-php.cmd.id', function () {
+                return new GenerateClientId;
+            });
+
+            $this->commands(['io-php.cmd.id']);
+        }
+    }
+
+    protected function registerClient()
     {
         $this->app->singleton("io-php.client", function ($app) {
             $host = $app['config']->get('io-php.host', 'http://127.0.0.1:3003');
