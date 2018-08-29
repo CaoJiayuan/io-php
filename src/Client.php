@@ -27,11 +27,16 @@ class Client
      * @var null|TokenProvider
      */
     protected $token = null;
+    /**
+     * @var string
+     */
+    protected $id;
 
-    public function __construct(Requester $requester, $masterChannel = 'master')
+    public function __construct(Requester $requester, $masterChannel = 'master', $id = 'random-id')
     {
         $this->requester = $requester;
         $this->masterChannel = $masterChannel;
+        $this->id = $id;
     }
 
     public function broadcast($channel, $payload, $guest = false)
@@ -46,8 +51,17 @@ class Client
     {
         return $this->post('/subscribe', [
             'channels' => $channel,
-            'hooks'    => $hooks
+            'hooks'    => $hooks,
+            'id'       => $this->getId($channel)
         ], $guest);
+    }
+
+    public function unsubscribe($channel)
+    {
+        return $this->post('/unsubscribe', [
+            'channels' => $channel,
+            'id'       => $this->getId($channel)
+        ]);
     }
 
     public function config(array $configs)
@@ -83,5 +97,19 @@ class Client
     public function setCredentials(array $credentials)
     {
         $this->credentials = $credentials;
+    }
+
+    protected function wrapArray($value)
+    {
+        if (!is_array($value)) {
+            return [$value];
+        }
+
+        return $value;
+    }
+
+    protected function getId($channel)
+    {
+       return $this->id . '-' . md5(json_encode($this->wrapArray($channel)));
     }
 }

@@ -55,9 +55,11 @@ class ServiceProvider extends BaseServiceProvider
         $this->app->singleton("io-php.client", function ($app) {
             $host = $app['config']->get('io-php.host', 'http://127.0.0.1:3003');
             $credentials = $app['config']->get('io-php.credentials', []);
+            $master = $app['config']->get('io-php.master', 'master');
+            $id = $app['config']->get('io-php.credentials._id', 'randomid');
 
             $requester = new SimpleRequester($host);
-            $client = new Client($requester);
+            $client = new Client($requester, $master, $id . '-' . md5(gethostname()));
 
             $client->setTokenProvider(new TokenProvider($requester));
             $client->setCredentials($credentials);
