@@ -81,16 +81,30 @@ class Client
 
     public function post($path, $data = [], $guest = false)
     {
-        if (!$guest && ($tokenProvider = $this->getTokenProvider())) {
-            if ($this->requester instanceof TokenRequester) {
-                $tokenProvider->login($this->credentials, $this->loginPath);
-
-                $this->requester->setToken($tokenProvider->getToken());
-            }
-        }
-        return $this->requester->request('POST', $path, $data);
+        return $this->request('POST', $path, $data, $guest);
     }
 
+    public function get($path, $data = [], $guest = false)
+    {
+        return $this->request('GET', $path, $data, $guest);
+    }
+
+    protected function request($method, $path, $data = [], $guest = false)
+    {
+        $this->setToken($guest);
+
+        return $this->requester->request($method, $path, $data);
+    }
+
+    public function user()
+    {
+        return $this->request('GET', '/user');
+    }
+
+    public function channels()
+    {
+        return $this->request('GET', '/channels');
+    }
     /**
      * @param array $credentials
      */
@@ -111,5 +125,19 @@ class Client
     protected function getId($channel)
     {
        return $this->id . '-' . md5(json_encode($this->wrapArray($channel)));
+    }
+
+    /**
+     * @param $guest
+     */
+    public function setToken($guest): void
+    {
+        if (!$guest && ($tokenProvider = $this->getTokenProvider())) {
+            if ($this->requester instanceof TokenRequester) {
+                $tokenProvider->login($this->credentials, $this->loginPath);
+
+                $this->requester->setToken($tokenProvider->getToken());
+            }
+        }
     }
 }
