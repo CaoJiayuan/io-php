@@ -95,7 +95,7 @@ class Client
      * @param $path
      * @param array $data
      * @param bool $guest
-     * @return ResponseInterface
+     * @return mixed|array
      */
     protected function request($method, $path, $data = [], $guest = false)
     {
