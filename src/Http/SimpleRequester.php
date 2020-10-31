@@ -54,10 +54,11 @@ class SimpleRequester implements TokenRequester
     public function getGuzzle()
     {
         $options = [
-            'base_uri' => $this->baseUrl,
-            'headers' => [
-
-            ]
+            'base_uri'    => $this->baseUrl,
+            'headers'     => [
+                'Accept' => 'application/json'
+            ],
+            'http_errors' => false
         ];
         $this->getToken() && $options['headers']['Authorization'] = 'Bearer ' . $this->getToken();
 

@@ -5,6 +5,7 @@ namespace CaoJiayuan\Io;
 
 use CaoJiayuan\Io\Http\Requester;
 use CaoJiayuan\Io\Http\TokenRequester;
+use Psr\Http\Message\ResponseInterface;
 
 class Client
 {
@@ -42,7 +43,7 @@ class Client
     public function broadcast($channel, $payload, $guest = false)
     {
         return $this->post('/broadcast', [
-            'channels' => $channel,
+            'channels' => $this->wrapArray($channel),
             'payload'  => $payload
         ], $guest);
     }
@@ -50,7 +51,7 @@ class Client
     public function subscribe($channel, $hooks, $guest = false)
     {
         return $this->post('/subscribe', [
-            'channels' => $channel,
+            'channels' => $this->wrapArray($channel),
             'hooks'    => $hooks,
             'id'       => $this->getId($channel)
         ], $guest);
@@ -59,7 +60,7 @@ class Client
     public function unsubscribe($channel)
     {
         return $this->post('/unsubscribe', [
-            'channels' => $channel,
+            'channels' => $this->wrapArray($channel),
             'id'       => $this->getId($channel)
         ]);
     }
@@ -89,6 +90,13 @@ class Client
         return $this->request('GET', $path, $data, $guest);
     }
 
+    /**
+     * @param $method
+     * @param $path
+     * @param array $data
+     * @param bool $guest
+     * @return ResponseInterface
+     */
     protected function request($method, $path, $data = [], $guest = false)
     {
         $this->setToken($guest);
@@ -105,6 +113,7 @@ class Client
     {
         return $this->request('GET', '/channels');
     }
+
     /**
      * @param array $credentials
      */
@@ -124,7 +133,7 @@ class Client
 
     protected function getId($channel)
     {
-       return $this->id . '-' . md5(json_encode($this->wrapArray($channel)));
+        return $this->id . '-' . md5(json_encode($this->wrapArray($channel)));
     }
 
     /**
