@@ -56,9 +56,10 @@ class SimpleRequester implements TokenRequester
         $options = [
             'base_uri'    => $this->baseUrl,
             'headers'     => [
-                'Accept' => 'application/json'
+                'Accept'  => 'application/json'
             ],
-            'http_errors' => false
+            'http_errors' => false,
+            'verify'      => false
         ];
         $this->getToken() && $options['headers']['Authorization'] = 'Bearer ' . $this->getToken();
 
